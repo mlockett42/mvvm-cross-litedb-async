@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MvxContentPage x:TypeArguments="viewModels:ListContactsViewModel" 
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+    xmlns:mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+    xmlns:viewModels="clr-namespace:ExampleApp.Core.ViewModels;assembly=ExampleApp.Core"
+    xmlns:behaviors="clr-namespace:ExampleApp.Forms.UI.Behaviours"
+    xmlns:converters="clr-namespace:ExampleApp.Forms.UI.Converters"
+    x:Class="ExampleApp.Forms.UI.Views.ListContactsView"
+    >
+    <views:MvxContentPage.Content>
+        <Grid x:Name="RootElement">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!--<Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>-->
+            <Label Grid.Row="0" Text="Welcome to Xamarin.Forms!"
+                HorizontalOptions="CenterAndExpand" />
+            <ListView  Grid.Row="1" ItemsSource="{Binding Contacts}"  >
+                <ListView.Behaviors>
+                    <behaviors:EventToCommandBehavior EventName="ItemTapped" Command="{Binding Path=ItemTappedCommand}" EventArgsConverter="{StaticResource ItemTappedConverter}" />
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                <Label Text="{Binding LastName}" VerticalTextAlignment="Center" FontSize="Small" />
+                                <Label Text="{Binding FirstName}" VerticalTextAlignment="Center" FontSize="Small" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+
+            </ListView>
+            <Button Grid.Row="2" Command="{Binding AddContact}" Text="Add New"/>
+
+        </Grid>
+    </views:MvxContentPage.Content>
+</views:MvxContentPage>
