@@ -9,6 +9,9 @@
     xmlns:converters="clr-namespace:ExampleApp.Forms.UI.Converters"
     x:Class="ExampleApp.Forms.UI.Views.ListContactsView"
     >
+    <views:MvxContentPage.Resources>
+        <converters:ItemTappedConverter x:Key="ItemTappedConverter" />
+    </views:MvxContentPage.Resources>
     <views:MvxContentPage.Content>
         <Grid x:Name="RootElement">
             <Grid.RowDefinitions>

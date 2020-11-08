@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text;
 using Xamarin.Forms;
 
-namespace ExampleApp.Forms.UI.Conveters
+namespace ExampleApp.Forms.UI.Converters
 {
     public class ItemTappedConverter : IValueConverter
     {

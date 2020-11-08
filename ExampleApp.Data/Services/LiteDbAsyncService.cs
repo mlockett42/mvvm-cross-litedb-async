@@ -1,6 +1,7 @@
 ﻿using LiteDB.Async;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace ExampleApp.Data.Services
@@ -14,9 +15,11 @@ namespace ExampleApp.Data.Services
     {
         private readonly ILiteDatabaseAsync _liteDatabaseAsync;
 
-        public LiteDbAsyncService(ILiteDatabaseAsync liteDatabaseAsync)
+        public LiteDbAsyncService()
         {
-            _liteDatabaseAsync = liteDatabaseAsync;
+            var folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var databasePath = Path.Combine(folder, "hello.db");
+            _liteDatabaseAsync = new LiteDatabaseAsync(databasePath);
         }
 
         public ILiteDatabaseAsync LiteDatabaseAsync => _liteDatabaseAsync;
