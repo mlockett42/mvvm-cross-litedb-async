@@ -23,7 +23,14 @@ namespace ExampleApp.Data.Services
 
         public async Task<IList<Contact>> GetAllContacts()
         {
-            return new List<Contact>();
+            return new List<Contact>()
+            {
+                new Contact()
+                {
+                    FirstName = "Jim",
+                    LastName = "Jones"
+                }
+            };
         }
 
         public async Task<IList<Contact>> GetFilteredContacts(string lastNameStartsWith)

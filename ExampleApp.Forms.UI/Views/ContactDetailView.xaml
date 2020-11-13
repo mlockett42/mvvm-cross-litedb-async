@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<views:MvxContentPage x:TypeArguments="viewModels:ContactDetailViewModel" 
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+    xmlns:mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+    xmlns:viewModels="clr-namespace:ExampleApp.Core.ViewModels;assembly=ExampleApp.Core"
+    xmlns:behaviors="clr-namespace:ExampleApp.Forms.UI.Behaviours"
+    xmlns:converters="clr-namespace:ExampleApp.Forms.UI.Converters"
+    x:Class="ExampleApp.Forms.UI.Views.ContactDetailView"
+    >
+  <views:MvxContentPage.Content>
+      <StackLayout>
+          <Label Text="First Name" />
+          <Label Text="{Binding FirstName}" />
+          <Label Text="Last Name" />
+          <Label Text="{Binding LastName}" />
+        </StackLayout>
+  </views:MvxContentPage.Content>
+</views:MvxContentPage>

@@ -1,6 +1,7 @@
 ﻿using ExampleApp.Data.Models;
 using ExampleApp.Data.Services;
 using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,17 @@ namespace ExampleApp.Core.ViewModels
     {
         #region PrivateData
         private readonly IContactService _contactService;
+        private readonly IMvxNavigationService _navigationService;
         #endregion
 
         #region Initialization
-        public ListContactsViewModel(IContactService contactService)
+        public ListContactsViewModel(IContactService contactService, IMvxNavigationService navigationService)
         {
             _contactService = contactService;
+            _navigationService = navigationService;
 
             AddContact = new MvxAsyncCommand(AddContactAsync);
-            ItemTappedCommand = new MvxAsyncCommand(ItemTappedAsync);
+            ItemTappedCommand = new MvxAsyncCommand<Contact>(ItemTappedAsync);
         }
         public override async Task Initialize()
         {
@@ -57,9 +60,9 @@ namespace ExampleApp.Core.ViewModels
 
         public ICommand ItemTappedCommand { get; set; }
 
-        private Task ItemTappedAsync()
+        private async Task ItemTappedAsync(Contact contact)
         {
-            return Task.CompletedTask;
+            await _navigationService.Navigate<ContactDetailViewModel, Contact>(contact);
         }
         #endregion
 
