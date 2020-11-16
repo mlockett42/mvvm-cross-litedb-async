@@ -23,14 +23,7 @@ namespace ExampleApp.Data.Services
 
         public async Task<IList<Contact>> GetAllContacts()
         {
-            return new List<Contact>()
-            {
-                new Contact()
-                {
-                    FirstName = "Jim",
-                    LastName = "Jones"
-                }
-            };
+            return await _liteDbAsyncService.LiteDatabaseAsync.GetCollection<Contact>().Query().ToListAsync();
         }
 
         public async Task<IList<Contact>> GetFilteredContacts(string lastNameStartsWith)
