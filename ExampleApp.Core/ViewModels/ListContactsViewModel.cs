@@ -1,4 +1,5 @@
-﻿using ExampleApp.Data.Models;
+﻿using ExampleApp.Core.Models;
+using ExampleApp.Data.Models;
 using ExampleApp.Data.Services;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -6,6 +7,7 @@ using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -32,8 +34,98 @@ namespace ExampleApp.Core.ViewModels
         {
             await base.Initialize();
 
-            Contacts = new ObservableCollection<Contact>(await _contactService.GetAllContacts().ConfigureAwait(false));
+            var contacts = new ObservableCollection<Contact>(await _contactService.GetAllContactsAsync().ConfigureAwait(false));
+
+            if (contacts.Count == 0)
+            {
+                _ = _navigationService.Navigate<ConfirmViewModel, ConfirmPromptModel, ConfirmResultModel>(
+                    new ConfirmPromptModel() { Prompt = "We could find any contacts do you want to create some?" }
+                    ).ContinueWith(async (resultTask) =>
+                    {
+                        if (resultTask.Result.Result == true)
+                        {
+                            await InitializeDemoContacts();
+                        }
+                        else
+                        {
+                            Contacts = contacts;
+                        }
+                    });
+            }
+            else
+            {
+                Contacts = contacts;
+            }
         }
+
+        public async Task InitializeDemoContacts()
+        {
+            var contacts = new List<Contact>()
+            {
+                new Contact()
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "Kelsey",
+                    LastName = "Garza",
+                    Email = "Kelly@suscipit.edu",
+                    AddressLine1 = "62702 West Bosnia and Herzegovina Way",
+                    AddressLine2 = "",
+                    City ="Wheaton",
+                    State = "MO"
+                },
+                new Contact()
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "Brendan",
+                    LastName = "Bennett",
+                    Email = "Donna@cursus.net",
+                    AddressLine1 = "8674 West Venezuela Ct.",
+                    AddressLine2 = "",
+                    City = "DuBois",
+                    State = "MI"
+                },
+                new Contact()
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "Davis",
+                    LastName = "Clay",
+                    Email = "Rhea@ac.net",
+                    AddressLine1 = "53699 West Dunkirk Blvd.",
+                    AddressLine2 = "",
+                    City = "Dixon",
+                    State =  "MS"
+                },
+                new Contact()
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "Cairo",
+                    LastName = "Holloway",
+                    Email = "Iona@massa.us",
+                    AddressLine1 = "21197 South Bosnia and Herzegovina Ct.",
+                    AddressLine2 = "",
+                    City =  "Worcester",
+                    State = "TX"
+                },
+                new Contact()
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "Hillary",
+                    LastName = "Rich",
+                    Email = "Gabriel@malesuada.org",
+                    AddressLine1 = "35115 Bolivia Way",
+                    AddressLine2 = "",
+                    City = "Laughlin",
+                    State = "IA"
+                },
+            };
+
+            await Task.WhenAll(contacts.Select(c => _contactService.SaveContactAsync(c)));
+
+            contacts = await _contactService.GetAllContactsAsync().ConfigureAwait(false);
+
+            Contacts = new ObservableCollection<Contact>(contacts);
+        }
+
         #endregion
 
         #region BindableData

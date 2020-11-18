@@ -8,9 +8,9 @@ namespace ExampleApp.Data.Services
 {
     public interface IContactService
     {
-        Task<List<Contact>> GetAllContacts();
+        Task<List<Contact>> GetAllContactsAsync();
         Task<IList<Contact>> GetFilteredContacts(string lastNameStartsWith);
-        Task SaveContact(Contact contact);
+        Task SaveContactAsync(Contact contact);
     }
 
     public class ContactService : IContactService
@@ -21,7 +21,7 @@ namespace ExampleApp.Data.Services
             _liteDbAsyncService = liteDbAsyncService;
         }
 
-        public Task<List<Contact>> GetAllContacts()
+        public Task<List<Contact>> GetAllContactsAsync()
         {
             return _liteDbAsyncService.LiteDatabaseAsync.GetCollection<Contact>().Query().ToListAsync();
         }
@@ -31,9 +31,10 @@ namespace ExampleApp.Data.Services
             return new List<Contact>();
         }
 
-        public async Task SaveContact(Contact contact)
+        public Task SaveContactAsync(Contact contact)
         {
-
+            return _liteDbAsyncService.LiteDatabaseAsync.GetCollection<Contact>().UpsertAsync(contact);
         }
+
     }
 }
