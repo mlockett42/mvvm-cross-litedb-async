@@ -1,7 +1,4 @@
-﻿using Acr.UserDialogs;
-using ExampleApp.Core.Services;
-using ExampleApp.Forms.UWP.Controls;
-using MvvmCross;
+﻿using MvvmCross;
 using MvvmCross.Forms.Platforms.Uap.Core;
 
 namespace ExampleApp.Forms.UWP
@@ -11,7 +8,6 @@ namespace ExampleApp.Forms.UWP
         public override void InitializeSecondary()
         {
             base.InitializeSecondary();
-            Mvx.IoCProvider.RegisterSingleton(() => (IDialogs)new Dialogs(UserDialogs.Instance));
         }
     }
 }
