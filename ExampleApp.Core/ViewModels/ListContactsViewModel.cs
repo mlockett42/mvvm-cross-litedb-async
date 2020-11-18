@@ -32,17 +32,7 @@ namespace ExampleApp.Core.ViewModels
         {
             await base.Initialize();
 
-            ObservableCollection<Contact> contacts = null;
-            try
-            {
-                contacts = new ObservableCollection<Contact>(await _contactService.GetAllContacts());
-            }
-            catch (Exception ex)
-            {
-
-            }
-
-            Contacts = contacts;
+            Contacts = new ObservableCollection<Contact>(await _contactService.GetAllContacts().ConfigureAwait(false));
         }
         #endregion
 
