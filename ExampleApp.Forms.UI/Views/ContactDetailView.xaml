@@ -12,9 +12,23 @@
   <views:MvxContentPage.Content>
       <StackLayout>
           <Label Text="First Name" />
-          <Label Text="{Binding FirstName}" />
+          <Entry Text="{Binding FirstName}" />
           <Label Text="Last Name" />
-          <Label Text="{Binding LastName}" />
-        </StackLayout>
+          <Entry Text="{Binding LastName}" />
+          <Label Text="Email" />
+          <Entry Text="{Binding Email}" />
+          <Label Text="Address" />
+          <Entry Text="{Binding AddressLine1}" />
+          <Label Text="Address" />
+          <Entry Text="{Binding AddressLine2}" />
+          <Label Text="City" />
+          <Entry Text="{Binding City}" />
+          <Label Text="State" />
+          <Entry Text="{Binding State}" />
+          <StackLayout Orientation="Horizontal">
+               <Button Command="{Binding CancelCommand}" Text="Cancel"/>
+               <Button Command="{Binding SaveCommand}" Text="Save"/>
+          </StackLayout>
+      </StackLayout>
   </views:MvxContentPage.Content>
 </views:MvxContentPage>

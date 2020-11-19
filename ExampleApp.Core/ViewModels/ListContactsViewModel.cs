@@ -154,7 +154,19 @@ namespace ExampleApp.Core.ViewModels
 
         private async Task ItemTappedAsync(Contact contact)
         {
-            await _navigationService.Navigate<ContactDetailViewModel, Guid>(contact.Id);
+            var result = await _navigationService.Navigate<ContactDetailViewModel, Guid, ContactDetailResultModel>(contact.Id);
+            if (result.WasSaved)
+            {
+                // From https://stackoverflow.com/a/4075374
+                var item = Contacts.Select((item, index) => new { Item = item, Index = index })
+                               .Where(pair => pair.Item.Id == contact.Id)
+                               .Select(result => result.Index)
+                               .First();
+
+                var newContact = await _contactService.GetContactAsync(contact.Id);
+                Contacts.RemoveAt(item);
+                Contacts.Insert(item, newContact);
+            }
         }
         #endregion
 
