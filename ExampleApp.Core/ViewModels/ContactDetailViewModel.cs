@@ -1,35 +1,51 @@
 ﻿using ExampleApp.Data.Models;
+using ExampleApp.Data.Services;
 using MvvmCross.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ExampleApp.Core.ViewModels
 {
-    public class ContactDetailViewModel : MvxViewModel<Contact>
+    public class ContactDetailViewModel : MvxViewModel<Guid>
     {
+        #region PrivateData
+        private readonly IContactService _contactService;
+        private Guid _contactId;
         private Contact _contact;
+        #endregion
+
+        #region Initialization
+        public ContactDetailViewModel(IContactService contactService)
+        {
+            _contactService = contactService;
+        }
 
         public override void Prepare()
         {
             // first callback. Initialize parameter-agnostic stuff here
         }
 
-        public override void Prepare(Contact parameter)
+        public override void Prepare(Guid parameter)
         {
             // receive and store the parameter here
-            _contact = parameter;
+            _contactId = parameter;
         }
 
         public override async Task Initialize()
         {
             await base.Initialize();
 
-            // do the heavy work here
+            _contact = await _contactService.GetContactAsync(_contactId).ConfigureAwait(false);
+
+            _ = RaisePropertyChanged(() => FirstName);
+            _ = RaisePropertyChanged(() => LastName);
         }
 
+        #endregion
+
+        #region BindableData
         public string FirstName => _contact?.FirstName;
         public string LastName => _contact?.LastName;
+        #endregion
     }
 }

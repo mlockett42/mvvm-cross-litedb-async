@@ -154,7 +154,7 @@ namespace ExampleApp.Core.ViewModels
 
         private async Task ItemTappedAsync(Contact contact)
         {
-            await _navigationService.Navigate<ContactDetailViewModel, Contact>(contact);
+            await _navigationService.Navigate<ContactDetailViewModel, Guid>(contact.Id);
         }
         #endregion
 
