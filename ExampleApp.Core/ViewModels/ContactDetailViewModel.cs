@@ -75,9 +75,16 @@ namespace ExampleApp.Core.ViewModels
 
         private async Task SaveAsync()
         {
+            _isBusy = true;
+            _ = RaisePropertyChanged(() => CanDo);
             await _contactService.SaveContactAsync(_contact);
             await _navigationService.Close(this, new ContactDetailResultModel() { WasSaved = true, ContactId = _contactId });
+            _isBusy = false;
+            _ = RaisePropertyChanged(() => CanDo);
         }
+
+        private bool _isBusy;
+        public bool CanDo => !_isBusy;
         #endregion
     }
 }
