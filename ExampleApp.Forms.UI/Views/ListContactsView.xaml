@@ -13,6 +13,7 @@
         <converters:ItemTappedConverter x:Key="ItemTappedConverter" />
     </views:MvxContentPage.Resources>
     <views:MvxContentPage.Content>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <Grid x:Name="RootElement">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -43,6 +44,17 @@
             </ListView>
             <Button Grid.Row="2" Command="{Binding AddContact}" Text="Add New"/>
 
-        </Grid>
+            </Grid>
+            <StackLayout IsVisible="{Binding IsBusy}" Padding="12"
+                 AbsoluteLayout.LayoutFlags="PositionProportional"
+                 AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="#80000000"/>
+
+                <Label Text="Loading..." HorizontalOptions="Center" TextColor="White"/>
+
+            </StackLayout>
+
+        </AbsoluteLayout>
     </views:MvxContentPage.Content>
 </views:MvxContentPage>

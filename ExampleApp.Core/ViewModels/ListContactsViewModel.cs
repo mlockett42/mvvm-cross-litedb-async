@@ -34,7 +34,13 @@ namespace ExampleApp.Core.ViewModels
         {
             await base.Initialize();
 
+            IsBusy = true;
+            _ = RaisePropertyChanged(() => IsBusy);
+
             var contacts = new ObservableCollection<Contact>(await _contactService.GetAllContactsAsync().ConfigureAwait(false));
+
+            IsBusy = false;
+            _ = RaisePropertyChanged(() => IsBusy);
 
             if (contacts.Count == 0)
             {
@@ -140,6 +146,8 @@ namespace ExampleApp.Core.ViewModels
             }
         }
 
+        public bool IsBusy { get; set; }
+
         #endregion
 
         #region Commands
@@ -155,7 +163,7 @@ namespace ExampleApp.Core.ViewModels
         private async Task ItemTappedAsync(Contact contact)
         {
             var result = await _navigationService.Navigate<ContactDetailViewModel, Guid, ContactDetailResultModel>(contact.Id);
-            if (result.WasSaved)
+            if (result != null && result.WasSaved)
             {
                 // From https://stackoverflow.com/a/4075374
                 var item = Contacts.Select((item, index) => new { Item = item, Index = index })
