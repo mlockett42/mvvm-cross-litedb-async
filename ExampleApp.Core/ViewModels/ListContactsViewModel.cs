@@ -190,11 +190,6 @@ namespace ExampleApp.Core.ViewModels
                     ParentViewModel = this
                 }
                 );
-            if (result != null && result.WasSaved)
-            {
-                var newContact = await _contactService.GetContactAsync(result.ContactId);
-                Contacts.Add(newContact);
-            }
         }
 
         public ICommand ItemTappedCommand { get; set; }
@@ -208,18 +203,6 @@ namespace ExampleApp.Core.ViewModels
                     ParentViewModel = this
                 }
                 );
-            if (result != null && result.WasSaved)
-            {
-                // From https://stackoverflow.com/a/4075374
-                var item = Contacts.Select((item, index) => new { Item = item, Index = index })
-                               .Where(pair => pair.Item.Id == contact.Id)
-                               .Select(result => result.Index)
-                               .First();
-
-                var newContact = await _contactService.GetContactAsync(contact.Id);
-                Contacts.RemoveAt(item);
-                Contacts.Insert(item, newContact);
-            }
         }
 
         public void DeleteContact(Contact contact)
@@ -231,6 +214,26 @@ namespace ExampleApp.Core.ViewModels
                            .First();
 
             Contacts.RemoveAt(item);
+        }
+
+        public async Task SaveContact(bool wasAdded, Contact contact)
+        {
+            if (wasAdded)
+            {
+                Contacts.Add(contact);
+            }
+            else
+            {
+                // From https://stackoverflow.com/a/4075374
+                var item = Contacts.Select((item, index) => new { Item = item, Index = index })
+                               .Where(pair => pair.Item.Id == contact.Id)
+                               .Select(result => result.Index)
+                               .First();
+
+                var newContact = await _contactService.GetContactAsync(contact.Id);
+                Contacts.RemoveAt(item);
+                Contacts.Insert(item, newContact);
+            }
         }
         #endregion
 

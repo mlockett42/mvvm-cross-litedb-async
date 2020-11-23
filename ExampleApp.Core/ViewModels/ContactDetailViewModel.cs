@@ -110,7 +110,7 @@ namespace ExampleApp.Core.ViewModels
 
         private Task CancelAsync()
         {
-            return _navigationService.Close(this, new ContactDetailResultModel() { WasSaved = false });
+            return _navigationService.Close(this, new ContactDetailResultModel());
         }
 
         public ICommand SaveCommand { get; set; }
@@ -127,9 +127,12 @@ namespace ExampleApp.Core.ViewModels
             _isBusy = true;
             _ = RaisePropertyChanged(() => CanDo);
             await _contactService.SaveContactAsync(_contact);
-            await _navigationService.Close(this, new ContactDetailResultModel() { WasSaved = true, ContactId = _contactId });
+            await _navigationService.Close(this, new ContactDetailResultModel() { ContactId = _contactId });
             _isBusy = false;
             _ = RaisePropertyChanged(() => CanDo);
+
+            // Have to do this nonsense because MvvmCross navigation is not a stack. What a mediocre platform.
+            await _parent.SaveContact(_addNew, _contact);
         }
 
         public ICommand DeleteCommand { get; set; }
