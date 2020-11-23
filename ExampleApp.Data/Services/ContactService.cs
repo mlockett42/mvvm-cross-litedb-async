@@ -9,7 +9,7 @@ namespace ExampleApp.Data.Services
     public interface IContactService
     {
         Task<List<Contact>> GetAllContactsAsync();
-        Task<IList<Contact>> GetFilteredContacts(string lastNameStartsWith);
+        Task<List<Contact>> GetFilteredContactsAsync(string lastNameStartsWith);
         Task SaveContactAsync(Contact contact);
         Task<Contact> GetContactAsync(Guid contactId);
     }
@@ -32,9 +32,12 @@ namespace ExampleApp.Data.Services
             return _liteDbAsyncService.LiteDatabaseAsync.GetCollection<Contact>().FindByIdAsync(contactId);
         }
 
-        public async Task<IList<Contact>> GetFilteredContacts(string lastNameStartsWith)
+        public Task<List<Contact>> GetFilteredContactsAsync(string lastNameStartsWith)
         {
-            return new List<Contact>();
+            return _liteDbAsyncService.LiteDatabaseAsync.GetCollection<Contact>()
+                .Query()
+                .Where(c => c.LastName.StartsWith(lastNameStartsWith))
+                .ToListAsync();
         }
 
         public Task SaveContactAsync(Contact contact)

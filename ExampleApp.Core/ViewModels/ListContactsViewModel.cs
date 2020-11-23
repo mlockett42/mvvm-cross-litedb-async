@@ -148,6 +148,33 @@ namespace ExampleApp.Core.ViewModels
 
         public bool IsBusy { get; set; }
 
+        private string _search;
+        public string Search {
+            get => _search;
+            set
+            {
+                _search = value;
+                _ = FilterContacts();
+            }
+        }
+
+        #endregion
+
+        #region Functions
+        private async Task FilterContacts()
+        {
+            IsBusy = true;
+            _ = RaisePropertyChanged(() => IsBusy);
+
+            Contacts = new ObservableCollection<Contact>(
+                await _contactService
+                .GetFilteredContactsAsync(_search)
+                .ConfigureAwait(false)
+                );
+            _ = RaisePropertyChanged(() => Contacts);
+            IsBusy = false;
+            _ = RaisePropertyChanged(() => IsBusy);
+        }
         #endregion
 
         #region Commands
