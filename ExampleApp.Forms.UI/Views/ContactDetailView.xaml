@@ -13,8 +13,10 @@
       <StackLayout>
           <Label Text="First Name" />
           <Entry Text="{Binding FirstName}" />
+          <Label Text="{Binding FirstNameErrorMessage}" IsVisible="{Binding IsFirstNameError}" TextColor="Red" />
           <Label Text="Last Name" />
           <Entry Text="{Binding LastName}" />
+          <Label Text="{Binding LastNameErrorMessage}" IsVisible="{Binding IsLastNameError}" TextColor="Red" />
           <Label Text="Email" />
           <Entry Text="{Binding Email}" />
           <Label Text="Address" />

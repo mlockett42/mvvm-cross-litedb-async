@@ -18,6 +18,7 @@ namespace ExampleApp.Core.ViewModels
         private Contact _contact;
         private readonly IMvxNavigationService _navigationService;
         private bool _addNew;
+        private bool _triedSaving = false;
         #endregion
 
         #region Initialization
@@ -64,13 +65,35 @@ namespace ExampleApp.Core.ViewModels
         #endregion
 
         #region BindableData
-        public string FirstName { get => _contact?.FirstName; set => _contact.FirstName = value; }
-        public string LastName  { get => _contact?.LastName; set => _contact.LastName = value; }
+        public string FirstName
+        {
+            get => _contact?.FirstName ?? "";
+            set
+            {
+                _contact.FirstName = value;
+                RaisePropertyChanged(() => IsFirstNameError);
+            }
+        }
+        public string LastName
+        {
+            get => _contact?.LastName ?? "";
+            set
+            {
+                _contact.LastName = value;
+                RaisePropertyChanged(() => IsLastNameError);
+            }
+        }
         public string Email { get => _contact?.Email; set => _contact.Email = value; }
         public string AddressLine1 { get => _contact?.AddressLine1; set => _contact.AddressLine1 = value; }
         public string AddressLine2 { get => _contact?.AddressLine2; set => _contact.AddressLine2 = value; }
         public string City { get => _contact?.City; set => _contact.City = value; }
         public string State { get => _contact?.State; set => _contact.State = value; }
+
+        public bool IsFirstNameError => _triedSaving && FirstName == "";
+        public string FirstNameErrorMessage => "You must enter a First Name";
+
+        public bool IsLastNameError => _triedSaving && LastName == "";
+        public string LastNameErrorMessage => "You must enter a Last Name";
         #endregion
 
         #region Commands
@@ -85,6 +108,13 @@ namespace ExampleApp.Core.ViewModels
 
         private async Task SaveAsync()
         {
+            _triedSaving = true;
+            if (FirstName == "" || LastName == "")
+            {
+                _ = RaisePropertyChanged(() => IsFirstNameError);
+                _ = RaisePropertyChanged(() => IsLastNameError);
+                return;
+            }
             _isBusy = true;
             _ = RaisePropertyChanged(() => CanDo);
             await _contactService.SaveContactAsync(_contact);
