@@ -30,7 +30,7 @@
           <StackLayout Orientation="Horizontal">
                <Button Command="{Binding CancelCommand}" IsEnabled="{Binding CanDo}" Text="Cancel"/>
                <Button Command="{Binding SaveCommand}" IsEnabled="{Binding CanDo}" Text="Save"/>
-               <Button Command="{Binding DeleteCommand}" IsEnabled="{Binding CanDo}" Text="Delete"/>
+               <Button Command="{Binding DeleteCommand}" IsEnabled="{Binding CanDelete}" Text="Delete"/>
             </StackLayout>
       </StackLayout>
   </views:MvxContentPage.Content>

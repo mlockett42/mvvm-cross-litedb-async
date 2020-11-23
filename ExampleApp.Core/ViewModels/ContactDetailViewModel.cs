@@ -126,10 +126,12 @@ namespace ExampleApp.Core.ViewModels
             }
             _isBusy = true;
             _ = RaisePropertyChanged(() => CanDo);
+            _ = RaisePropertyChanged(() => CanDelete);
             await _contactService.SaveContactAsync(_contact);
             await _navigationService.Close(this, new ContactDetailResultModel() { ContactId = _contactId });
             _isBusy = false;
             _ = RaisePropertyChanged(() => CanDo);
+            _ = RaisePropertyChanged(() => CanDelete);
 
             // Have to do this nonsense because MvvmCross navigation is not a stack. What a mediocre platform.
             await _parent.SaveContact(_addNew, _contact);
@@ -150,11 +152,12 @@ namespace ExampleApp.Core.ViewModels
                 // Have to do this nonsense because MvvmCross navigation is not a stack. What a mediocre platform.
                 _parent.DeleteContact(_contact);
             }
-            _ = RaisePropertyChanged(() => CanDo);
+            _ = RaisePropertyChanged(() => CanDelete);
         }
 
         private bool _isBusy;
         public bool CanDo => !_isBusy;
+        public bool CanDelete => CanDo && !_addNew;
         #endregion
     }
 }
