@@ -6,6 +6,6 @@ namespace ExampleApp.Core.Models
 {
     public class ConfirmResultModel
     {
-        public bool Result { get; set; }
+        public bool Choice { get; set; }
     }
 }

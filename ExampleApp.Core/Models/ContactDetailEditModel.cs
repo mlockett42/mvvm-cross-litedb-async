@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExampleApp.Core.ViewModels;
+using System;
 
 namespace ExampleApp.Core.Models
 {
@@ -6,5 +7,6 @@ namespace ExampleApp.Core.Models
     {
         public bool AddNew { get; set; }
         public Guid ContactId { get; set; }
+        public ListContactsViewModel ParentViewModel { get; set; }
     }
 }

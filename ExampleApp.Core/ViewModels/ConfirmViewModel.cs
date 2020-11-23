@@ -67,7 +67,7 @@ namespace ExampleApp.Core.ViewModels
 
         public Task SomeMethodToClose(bool result)
         {
-            return _navigationService.Close(this, new ConfirmResultModel() { Result = result });
+            return _navigationService.Close(this, new ConfirmResultModel() { Choice = result });
         }
         #endregion
     }

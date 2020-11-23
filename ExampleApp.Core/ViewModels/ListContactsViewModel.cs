@@ -45,10 +45,10 @@ namespace ExampleApp.Core.ViewModels
             if (contacts.Count == 0)
             {
                 _ = _navigationService.Navigate<ConfirmViewModel, ConfirmPromptModel, ConfirmResultModel>(
-                    new ConfirmPromptModel() { Prompt = "We could find any contacts do you want to create some?" }
+                    new ConfirmPromptModel() { Prompt = "We could not find any contacts do you want to create some?" }
                     ).ContinueWith(async (resultTask) =>
                     {
-                        if (resultTask.Result.Result == true)
+                        if (resultTask.Result.Choice == true)
                         {
                             await InitializeDemoContacts();
                         }
@@ -186,7 +186,8 @@ namespace ExampleApp.Core.ViewModels
                 new ContactDetailEditModel()
                 {
                     AddNew = true,
-                    ContactId = Guid.NewGuid()
+                    ContactId = Guid.NewGuid(),
+                    ParentViewModel = this
                 }
                 );
             if (result != null && result.WasSaved)
@@ -203,7 +204,8 @@ namespace ExampleApp.Core.ViewModels
             var result = await _navigationService.Navigate<ContactDetailViewModel, ContactDetailEditModel, ContactDetailResultModel>(
                 new ContactDetailEditModel()
                 {
-                    ContactId = contact.Id
+                    ContactId = contact.Id,
+                    ParentViewModel = this
                 }
                 );
             if (result != null && result.WasSaved)
@@ -218,6 +220,17 @@ namespace ExampleApp.Core.ViewModels
                 Contacts.RemoveAt(item);
                 Contacts.Insert(item, newContact);
             }
+        }
+
+        public void DeleteContact(Contact contact)
+        {
+            // From https://stackoverflow.com/a/4075374
+            var item = Contacts.Select((item, index) => new { Item = item, Index = index })
+                           .Where(pair => pair.Item.Id == contact.Id)
+                           .Select(result => result.Index)
+                           .First();
+
+            Contacts.RemoveAt(item);
         }
         #endregion
 

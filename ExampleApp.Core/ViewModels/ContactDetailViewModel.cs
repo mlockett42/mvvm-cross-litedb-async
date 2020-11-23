@@ -18,6 +18,7 @@ namespace ExampleApp.Core.ViewModels
         private Contact _contact;
         private readonly IMvxNavigationService _navigationService;
         private bool _addNew;
+        private ListContactsViewModel _parent;
         private bool _triedSaving = false;
         #endregion
 
@@ -29,6 +30,7 @@ namespace ExampleApp.Core.ViewModels
 
             CancelCommand = new MvxAsyncCommand(CancelAsync);
             SaveCommand = new MvxAsyncCommand(SaveAsync);
+            DeleteCommand = new MvxAsyncCommand(DeleteAsync);
         }
 
         public override void Prepare()
@@ -41,6 +43,7 @@ namespace ExampleApp.Core.ViewModels
             // receive and store the parameter here
             _contactId = parameter.ContactId;
             _addNew = parameter.AddNew;
+            _parent = parameter.ParentViewModel;
         }
 
         public override async Task Initialize()
@@ -70,7 +73,10 @@ namespace ExampleApp.Core.ViewModels
             get => _contact?.FirstName ?? "";
             set
             {
-                _contact.FirstName = value;
+                if (_contact != null)
+                {
+                    _contact.FirstName = value;
+                }
                 RaisePropertyChanged(() => IsFirstNameError);
             }
         }
@@ -79,7 +85,10 @@ namespace ExampleApp.Core.ViewModels
             get => _contact?.LastName ?? "";
             set
             {
-                _contact.LastName = value;
+                if (_contact != null)
+                {
+                    _contact.LastName = value;
+                }
                 RaisePropertyChanged(() => IsLastNameError);
             }
         }
@@ -120,6 +129,24 @@ namespace ExampleApp.Core.ViewModels
             await _contactService.SaveContactAsync(_contact);
             await _navigationService.Close(this, new ContactDetailResultModel() { WasSaved = true, ContactId = _contactId });
             _isBusy = false;
+            _ = RaisePropertyChanged(() => CanDo);
+        }
+
+        public ICommand DeleteCommand { get; set; }
+
+        private async Task DeleteAsync()
+        {
+            var result = await _navigationService.Navigate<ConfirmViewModel, ConfirmPromptModel, ConfirmResultModel>(
+                new ConfirmPromptModel() { Prompt = $"Are you sure you want to delete {FirstName} {LastName}?" }
+                );
+            if (result.Choice)
+            {
+                await _contactService.DeleteContactAsync(_contact);
+                await _navigationService.Close(this, new ContactDetailResultModel() { ContactId = _contactId });
+
+                // Have to do this nonsense because MvvmCross navigation is not a stack. What a mediocre platform.
+                _parent.DeleteContact(_contact);
+            }
             _ = RaisePropertyChanged(() => CanDo);
         }
 

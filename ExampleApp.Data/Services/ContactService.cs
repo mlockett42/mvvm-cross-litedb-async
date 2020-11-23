@@ -12,6 +12,7 @@ namespace ExampleApp.Data.Services
         Task<List<Contact>> GetFilteredContactsAsync(string lastNameStartsWith);
         Task SaveContactAsync(Contact contact);
         Task<Contact> GetContactAsync(Guid contactId);
+        Task DeleteContactAsync(Contact contact);
     }
 
     public class ContactService : IContactService
@@ -20,6 +21,11 @@ namespace ExampleApp.Data.Services
         public ContactService(ILiteDbAsyncService liteDbAsyncService)
         {
             _liteDbAsyncService = liteDbAsyncService;
+        }
+
+        public Task DeleteContactAsync(Contact contact)
+        {
+            return _liteDbAsyncService.LiteDatabaseAsync.GetCollection<Contact>().DeleteAsync(contact.Id);
         }
 
         public Task<List<Contact>> GetAllContactsAsync()
