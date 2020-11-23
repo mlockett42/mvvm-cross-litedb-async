@@ -10,13 +10,14 @@ using System.Windows.Input;
 
 namespace ExampleApp.Core.ViewModels
 {
-    public class ContactDetailViewModel : MvxViewModel<Guid, ContactDetailResultModel>
+    public class ContactDetailViewModel : MvxViewModel<ContactDetailEditModel, ContactDetailResultModel>
     {
         #region PrivateData
         private readonly IContactService _contactService;
         private Guid _contactId;
         private Contact _contact;
         private readonly IMvxNavigationService _navigationService;
+        private bool _addNew;
         #endregion
 
         #region Initialization
@@ -34,21 +35,30 @@ namespace ExampleApp.Core.ViewModels
             // first callback. Initialize parameter-agnostic stuff here
         }
 
-        public override void Prepare(Guid parameter)
+        public override void Prepare(ContactDetailEditModel parameter)
         {
             // receive and store the parameter here
-            _contactId = parameter;
+            _contactId = parameter.ContactId;
+            _addNew = parameter.AddNew;
         }
 
         public override async Task Initialize()
         {
             await base.Initialize();
 
-            _contact = await _contactService.GetContactAsync(_contactId).ConfigureAwait(false);
+            if (_addNew)
+            {
+                _contact = new Contact()
+                {
+                    Id = _contactId
+                };
+            }
+            else
+            {
+                _contact = await _contactService.GetContactAsync(_contactId).ConfigureAwait(false);
 
-            //_ = RaisePropertyChanged(() => FirstName);
-            //_ = RaisePropertyChanged(() => LastName);
-            _ = RaiseAllPropertiesChanged();
+                _ = RaiseAllPropertiesChanged();
+            }
         }
 
         #endregion

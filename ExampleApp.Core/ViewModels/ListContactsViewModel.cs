@@ -180,16 +180,32 @@ namespace ExampleApp.Core.ViewModels
         #region Commands
         public ICommand AddContact { get; set; }
 
-        private Task AddContactAsync()
+        private async Task AddContactAsync()
         {
-            return Task.CompletedTask;
+            var result = await _navigationService.Navigate<ContactDetailViewModel, ContactDetailEditModel, ContactDetailResultModel>(
+                new ContactDetailEditModel()
+                {
+                    AddNew = true,
+                    ContactId = Guid.NewGuid()
+                }
+                );
+            if (result != null && result.WasSaved)
+            {
+                var newContact = await _contactService.GetContactAsync(result.ContactId);
+                Contacts.Add(newContact);
+            }
         }
 
         public ICommand ItemTappedCommand { get; set; }
 
         private async Task ItemTappedAsync(Contact contact)
         {
-            var result = await _navigationService.Navigate<ContactDetailViewModel, Guid, ContactDetailResultModel>(contact.Id);
+            var result = await _navigationService.Navigate<ContactDetailViewModel, ContactDetailEditModel, ContactDetailResultModel>(
+                new ContactDetailEditModel()
+                {
+                    ContactId = contact.Id
+                }
+                );
             if (result != null && result.WasSaved)
             {
                 // From https://stackoverflow.com/a/4075374
