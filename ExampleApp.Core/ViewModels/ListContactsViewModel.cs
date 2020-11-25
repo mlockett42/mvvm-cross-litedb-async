@@ -35,12 +35,12 @@ namespace ExampleApp.Core.ViewModels
             await base.Initialize();
 
             IsBusy = true;
-            _ = RaisePropertyChanged(() => IsBusy);
+            await RaisePropertyChanged(() => IsBusy);
 
             var contacts = new ObservableCollection<Contact>(await _contactService.GetAllContactsAsync().ConfigureAwait(false));
 
             IsBusy = false;
-            _ = RaisePropertyChanged(() => IsBusy);
+            await RaisePropertyChanged(() => IsBusy);
 
             if (contacts.Count == 0)
             {
@@ -164,16 +164,16 @@ namespace ExampleApp.Core.ViewModels
         private async Task FilterContacts()
         {
             IsBusy = true;
-            _ = RaisePropertyChanged(() => IsBusy);
+            await RaisePropertyChanged(() => IsBusy);
 
             Contacts = new ObservableCollection<Contact>(
                 await _contactService
                 .GetFilteredContactsAsync(_search)
                 .ConfigureAwait(false)
                 );
-            _ = RaisePropertyChanged(() => Contacts);
+            await RaisePropertyChanged(() => Contacts);
             IsBusy = false;
-            _ = RaisePropertyChanged(() => IsBusy);
+            await RaisePropertyChanged(() => IsBusy);
         }
         #endregion
 
