@@ -18,5 +18,6 @@ namespace ExampleApp.Forms.AndroidApp
         {
 
         }
+
     }
 }

@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Setup.cs" />
     <Compile Include="SpashScreen.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +124,10 @@
     <ProjectReference Include="..\ExampleApp.Core\ExampleApp.Core.csproj">
       <Project>{8cf13bc3-7612-47fb-83c6-16ed2dc4e79f}</Project>
       <Name>ExampleApp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExampleApp.Forms.UI\ExampleApp.Forms.UI.csproj">
+      <Project>{cea09fed-a53b-4884-b670-04e89977a2b3}</Project>
+      <Name>ExampleApp.Forms.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
