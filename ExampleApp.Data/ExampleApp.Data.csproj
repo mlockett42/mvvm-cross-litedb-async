@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiteDB.Async" Version="0.0.9" />
+    <PackageReference Include="LiteDB.Async" Version="0.0.10" />
   </ItemGroup>
 
 </Project>
